@@ -61,3 +61,8 @@ ai:
       url: https://dashscope.aliyuncs.com/api/v1/services/rerank/text-rerank/text-rerank
       api-key: sk-0e580b2e9e1f430f8948f55041f986e4
       model: qwen3-rerank
+
+rustfs:
+  url: http://localhost:9000
+  access-key-id: rustfsadmin
+  secret-access-key: rustfsadmin
