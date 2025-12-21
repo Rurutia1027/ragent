@@ -17,8 +17,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@TableName("t_conversation_message")
-public class ConversationMessageDO {
+@TableName("t_conversation")
+public class ConversationDO {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
@@ -27,17 +27,9 @@ public class ConversationMessageDO {
 
     private String userId;
 
-    /**
-     * 角色：system/user/assistant
-     */
-    private String role;
+    private String title;
 
-    private String content;
-
-    /**
-     * 是否为摘要消息：0-否，1-是
-     */
-    private Integer isSummary;
+    private Date lastTime;
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
