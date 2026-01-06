@@ -17,8 +17,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@TableName("t_conversation_message")
-public class ConversationMessageDO {
+@TableName("t_conversation_summary")
+public class ConversationSummaryDO {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
@@ -26,11 +26,6 @@ public class ConversationMessageDO {
     private String conversationId;
 
     private String userId;
-
-    /**
-     * 角色：system/user/assistant
-     */
-    private String role;
 
     private String content;
 
