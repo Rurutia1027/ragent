@@ -15,15 +15,10 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent.rag.memory;
+package com.nageoffer.ai.ragent.dao.mapper;
 
-import com.nageoffer.ai.ragent.framework.convention.ChatMessage;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.nageoffer.ai.ragent.dao.entity.MessageFeedbackDO;
 
-import java.util.List;
-
-public interface ConversationMemoryService {
-
-    List<ChatMessage> load(String conversationId, String userId);
-
-    Long append(String conversationId, String userId, ChatMessage message);
+public interface MessageFeedbackMapper extends BaseMapper<MessageFeedbackDO> {
 }

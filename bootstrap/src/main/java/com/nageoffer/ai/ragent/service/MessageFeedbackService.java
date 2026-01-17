@@ -15,15 +15,29 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent.rag.memory;
+package com.nageoffer.ai.ragent.service;
 
-import com.nageoffer.ai.ragent.framework.convention.ChatMessage;
+import com.nageoffer.ai.ragent.controller.request.MessageFeedbackRequest;
 
 import java.util.List;
+import java.util.Map;
 
-public interface ConversationMemoryService {
+public interface MessageFeedbackService {
 
-    List<ChatMessage> load(String conversationId, String userId);
+    /**
+     * 提交会话消息反馈
+     *
+     * @param messageId 消息ID
+     * @param request   反馈内容
+     */
+    void submitFeedback(String messageId, MessageFeedbackRequest request);
 
-    Long append(String conversationId, String userId, ChatMessage message);
+    /**
+     * 查询用户在一批消息上的反馈值
+     *
+     * @param userId     用户ID
+     * @param messageIds 消息ID列表
+     * @return messageId -> vote
+     */
+    Map<Long, Integer> getUserVotes(String userId, List<Long> messageIds);
 }

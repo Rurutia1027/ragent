@@ -15,15 +15,28 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent.rag.memory;
+package com.nageoffer.ai.ragent.controller.request;
 
-import com.nageoffer.ai.ragent.framework.convention.ChatMessage;
+import lombok.Data;
 
-import java.util.List;
+/**
+ * 会话消息反馈请求
+ */
+@Data
+public class MessageFeedbackRequest {
 
-public interface ConversationMemoryService {
+    /**
+     * 反馈值：1=点赞，-1=点踩
+     */
+    private Integer vote;
 
-    List<ChatMessage> load(String conversationId, String userId);
+    /**
+     * 反馈原因（可选）
+     */
+    private String reason;
 
-    Long append(String conversationId, String userId, ChatMessage message);
+    /**
+     * 补充说明（可选）
+     */
+    private String comment;
 }
