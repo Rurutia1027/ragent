@@ -24,13 +24,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginVO {
+public class CurrentUserVO {
 
     private String userId;
 
-    private String role;
+    private String username;
 
-    private String token;
+    private String role;
 
     private String avatar;
 }
