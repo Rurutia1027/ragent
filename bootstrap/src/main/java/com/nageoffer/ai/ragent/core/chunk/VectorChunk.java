@@ -15,44 +15,50 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent.ingestion.domain.settings;
+package com.nageoffer.ai.ragent.core.chunk;
 
-import com.nageoffer.ai.ragent.core.chunk.ChunkingMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * 分块器设置实体类
- * 定义文档分块节点的配置参数，包括分块策略、块大小、重叠大小等
+ * 分块结果对象
+ * 统一的分块输出格式，包含所有必要信息
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChunkerSettings {
+public class VectorChunk {
 
     /**
-     * 分块策略
-     * 如固定大小、按句子、按段落、语义切分等
+     * 块的唯一标识符
      */
-    private ChunkingMode strategy;
+    private String chunkId;
 
     /**
-     * 块的目标大小（字符数或token数）
+     * 块在文档中的序号索引，从0开始
      */
-    private Integer chunkSize;
+    private Integer index;
 
     /**
-     * 相邻块之间的重叠大小
-     * 用于保持上下文连贯性
+     * 块的原始文本内容
      */
-    private Integer overlapSize;
+    private String content;
 
     /**
-     * 自定义分割符
-     * 用于指定文本切分的边界字符
+     * 块的元数据信息
      */
-    private String separator;
+    @Builder.Default
+    private Map<String, Object> metadata = new HashMap<>();
+
+    /**
+     * 块的向量嵌入表示
+     * 用于向量相似度检索的浮点数数组
+     */
+    private float[] embedding;
 }
