@@ -15,27 +15,26 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent;
+package com.nageoffer.ai.ragent.knowledge.service;
 
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import com.nageoffer.ai.ragent.knowledge.dao.entity.KnowledgeDocumentDO;
 
 /**
- * Ragent 核心应用启动类
+ * 知识库文档定时任务服务
  */
-@SpringBootApplication
-@EnableScheduling
-@MapperScan(basePackages = {
-        "com.nageoffer.ai.ragent.rag.dao.mapper",
-        "com.nageoffer.ai.ragent.ingestion.dao.mapper",
-        "com.nageoffer.ai.ragent.knowledge.dao.mapper",
-        "com.nageoffer.ai.ragent.user.dao.mapper"
-})
-public class RagentApplication {
+public interface KnowledgeDocumentScheduleService {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RagentApplication.class, args);
-    }
+    /**
+     * 根据文档信息创建或更新定时任务记录
+     *
+     * @param documentDO 文档实体
+     */
+    void upsertSchedule(KnowledgeDocumentDO documentDO);
+
+    /**
+     * 当文档启用/禁用时同步定时任务（仅更新已存在的任务）
+     *
+     * @param documentDO 文档实体
+     */
+    void syncScheduleIfExists(KnowledgeDocumentDO documentDO);
 }

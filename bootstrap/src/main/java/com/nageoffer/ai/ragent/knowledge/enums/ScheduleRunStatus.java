@@ -15,27 +15,37 @@
  * limitations under the License.
  */
 
-package com.nageoffer.ai.ragent;
+package com.nageoffer.ai.ragent.knowledge.enums;
 
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Ragent 核心应用启动类
+ * 定时任务执行状态
  */
-@SpringBootApplication
-@EnableScheduling
-@MapperScan(basePackages = {
-        "com.nageoffer.ai.ragent.rag.dao.mapper",
-        "com.nageoffer.ai.ragent.ingestion.dao.mapper",
-        "com.nageoffer.ai.ragent.knowledge.dao.mapper",
-        "com.nageoffer.ai.ragent.user.dao.mapper"
-})
-public class RagentApplication {
+@Getter
+@RequiredArgsConstructor
+public enum ScheduleRunStatus {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RagentApplication.class, args);
-    }
+    /**
+     * 正在运行
+     */
+    RUNNING("running"),
+
+    /**
+     * 执行成功
+     */
+    SUCCESS("success"),
+
+    /**
+     * 执行失败
+     */
+    FAILED("failed"),
+
+    /**
+     * 已跳过
+     */
+    SKIPPED("skipped");
+
+    private final String code;
 }
