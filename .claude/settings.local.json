@@ -10,7 +10,9 @@
       "Bash(kill:*)",
       "Bash(find:*)",
       "Bash(mvn clean compile:*)",
-      "Bash(javac:*)"
+      "Bash(javac:*)",
+      "Bash(java:*)",
+      "Bash(grep:*)"
     ]
   }
 }
