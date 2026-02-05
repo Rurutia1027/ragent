@@ -12,7 +12,9 @@
       "Bash(mvn clean compile:*)",
       "Bash(javac:*)",
       "Bash(java:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(git restore:*)"
     ]
   }
 }
