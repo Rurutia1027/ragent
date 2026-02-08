@@ -16,7 +16,11 @@
       "Bash(ls:*)",
       "Bash(git restore:*)",
       "Bash(mvn compile:*)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(dashboard\\): 完善Dashboard页面布局及新增图表子组件\n\n添加SuccessRateDonut、SessionBarChart、ActiveUsersAreaChart等可视化图表组件，\n新增PerformanceMetricsTable和TopInsightsTable数据表格组件，\n重构DashboardPage布局为多栏网格结构，优化KPI卡片及趋势图展示。\n\nCo-Authored-By: Claude Opus 4.6 \\(1M context\\) <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
