@@ -1,14 +1,12 @@
-# RAGent - RAG 综合智能体
-# Run: docker compose up -d
+# RAGent - 本地验证用：全栈（含 ragent 容器）
+# 用法: docker compose up -d
 # App: http://localhost:8080/api/ragent
 
 name: ragent
 
 services:
-  # --- Application ---
   ragent:
-    build: .
-    image: ragent:latest
+    image: nanachi1027/ragent:latest
     container_name: ragent
     ports:
       - "8080:8080"
@@ -23,19 +21,15 @@ services:
       RUSTFS_URL: http://rustfs:9000
       RUSTFS_ACCESS_KEY_ID: rustfsadmin
       RUSTFS_SECRET_ACCESS_KEY: rustfsadmin
-      # Optional: set if using Bailian/SiliconFlow
-      # BAILIAN_API_KEY: ${BAILIAN_API_KEY:-}
-      # SILICONFLOW_API_KEY: ${SILICONFLOW_API_KEY:-}
     depends_on:
-      mysql: { condition: service_healthy }
-      redis: { condition: service_healthy }
-      standalone: { condition: service_healthy }
-      rustfs: { condition: service_healthy }
+      - mysql
+      - redis
+      - standalone
+      - rustfs
     networks:
       - ragent-net
     restart: unless-stopped
 
-  # --- MySQL ---
   mysql:
     image: mysql:8.0
     container_name: ragent-mysql
@@ -57,7 +51,6 @@ services:
     networks:
       - ragent-net
 
-  # --- Redis ---
   redis:
     image: redis:7-alpine
     container_name: ragent-redis
@@ -74,7 +67,6 @@ services:
     networks:
       - ragent-net
 
-  # --- RustFS (S3-compatible object storage) ---
   rustfs:
     container_name: rustfs
     image: rustfs/rustfs:1.0.0-alpha.72
@@ -96,15 +88,9 @@ services:
       - "9001:9001"
     volumes:
       - rustfs-data:/data
-    healthcheck:
-      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:9000/ || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     networks:
       - ragent-net
 
-  # --- etcd (required by Milvus) ---
   etcd:
     container_name: etcd
     image: quay.io/coreos/etcd:v3.5.18
@@ -128,7 +114,6 @@ services:
     networks:
       - ragent-net
 
-  # --- Milvus standalone ---
   standalone:
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.6.6
@@ -146,8 +131,8 @@ services:
       - "19530:19530"
       - "9091:9091"
     depends_on:
-      etcd: { condition: service_healthy }
-      rustfs: { condition: service_healthy }
+      - etcd
+      - rustfs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
       interval: 30s
@@ -157,7 +142,6 @@ services:
     networks:
       - ragent-net
 
-  # --- Milvus Attu (optional UI, http://localhost:8000) ---
   attu:
     container_name: milvus-attu
     image: zilliz/attu:v2.6.3

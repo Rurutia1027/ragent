@@ -1,2 +1,5 @@
 #!/bin/sh
-docker compose --profile app up -d
+set -e
+
+# Full stack: infra + ragent container (uses docker-compose.yaml)
+docker compose -f docker-compose.yaml up -d
