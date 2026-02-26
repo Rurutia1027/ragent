@@ -1,0 +1,103 @@
+# Docker 镜像 CI：基于当前 Dockerfile 构建并推送多架构镜像（支持 Mac arm64 与 Linux amd64）
+# Repo Secrets: DOCKER_USER_NAME（Docker Hub 账号）, DOCKER_PASSWORD（Docker Hub 密码）
+# Repo Variables: DOCKER_IMAGE（如 nanachi1027/ragent，推送到 Docker Hub 的镜像名）
+# 未配置上述时使用 GITHUB_TOKEN 推送到 ghcr.io
+name: CI - Docker Build & Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag"
+        required: true
+        default: "latest"
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-push:
+    name: Build and push Docker image (multi-arch)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1️⃣ Build JAR (same as Dockerfile) to validate library + service build
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Build JAR for Docker
+        run: mvn clean package -pl bootstrap -am -DskipTests -B -q
+
+      # 2️⃣ Verify JARs are generated
+      - name: Verify JARs Generated
+        run: |
+          echo "Checking bootstrap (fat JAR for Docker)..."
+          ls -lh bootstrap/target/*.jar || echo "No bootstrap JARs found"
+          echo ""
+          echo "Checking framework module..."
+          ls -lh framework/target/*.jar 2>/dev/null || true
+          echo "Checking infra-ai module..."
+          ls -lh infra-ai/target/*.jar 2>/dev/null || true
+
+      # 3️⃣ Set up QEMU for multi-arch (Mac arm64 + Linux amd64)
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 4️⃣ Set up Docker Buildx (container driver for multi-arch)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          use: true
+
+      - name: Inspect buildx builder
+        run: docker buildx inspect --bootstrap
+
+      # 5️⃣ Docker login：优先 Docker Hub（DOCKER_USER_NAME + DOCKER_PASSWORD），否则 GHCR
+      - name: Login to Docker Hub
+        if: secrets.DOCKER_USER_NAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER_NAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to GHCR
+        if: secrets.DOCKER_USER_NAME == ''
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKER_IMAGE || format('ghcr.io/{0}', github.repository) }}
+          tags: |
+            type=raw,value=${{ github.event.inputs.image_tag || 'latest' }},enable=${{ github.event_name == 'workflow_dispatch' }}
+            type=ref,event=tag
+            type=sha,prefix=
+
+      # 6️⃣ Multi-arch build & push (linux/amd64 + linux/arm64 for Mac)
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
