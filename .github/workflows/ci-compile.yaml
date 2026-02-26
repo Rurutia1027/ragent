@@ -1,0 +1,26 @@
+# Maven 编译 CI：在 push/PR 时编译项目（bootstrap 及其依赖模块）
+name: CI - Compile
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  compile:
+    name: Maven compile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Compile (bootstrap and dependencies)
+        run: mvn compile -pl bootstrap -am -B -q
