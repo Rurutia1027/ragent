@@ -1,4 +1,4 @@
-# Ragent
+# Ragent | [![CI - Docker Build & Push](https://github.com/Rurutia1027/ragent/actions/workflows/ci-docker.yaml/badge.svg)](https://github.com/Rurutia1027/ragent/actions/workflows/ci-docker.yaml)
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Java](https://img.shields.io/badge/Java-17-ff7f2a.svg)
