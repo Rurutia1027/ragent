@@ -1,0 +1,8 @@
+# 仅包含 app，并给 app 加上 profile → 默认 docker compose up -d 只起 infra，不起 ragent
+# 只起依赖: docker compose up -d
+# 起全栈(含 app): docker compose --profile app up -d
+
+services:
+  ragent:
+    profiles:
+      - app
