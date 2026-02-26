@@ -12,6 +12,8 @@ on:
         required: true
         default: "latest"
   push:
+    branches:
+      - "**"
     tags:
       - "v*"
 
