@@ -18,7 +18,7 @@ COPY . .
 RUN mvn package -pl bootstrap -am -DskipTests -B -q
 
 # Runtime stage
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 RUN apk add --no-cache curl
