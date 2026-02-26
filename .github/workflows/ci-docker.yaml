@@ -1,7 +1,6 @@
 # Docker 镜像 CI：基于当前 Dockerfile 构建并推送多架构镜像（支持 Mac arm64 与 Linux amd64）
 # Repo Secrets: DOCKER_USER_NAME（Docker Hub 账号）, DOCKER_PASSWORD（Docker Hub 密码）
-# Repo Variables: DOCKER_IMAGE（如 nanachi1027/ragent，推送到 Docker Hub 的镜像名）
-# 未配置上述时使用 GITHUB_TOKEN 推送到 ghcr.io
+# Repo Variables: DOCKER_IMAGE（如 nanachi1027/ragent，仅推送到 Docker Hub，不使用 GHCR）
 name: CI - Docker Build & Push
 
 on:
@@ -76,7 +75,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.DOCKER_IMAGE || format('ghcr.io/{0}', github.repository) }}
+          images: ${{ vars.DOCKER_IMAGE }}
           tags: |
             type=raw,value=${{ github.event.inputs.image_tag || 'latest' }},enable=${{ github.event_name == 'workflow_dispatch' }}
             type=ref,event=tag
