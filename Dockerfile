@@ -1,6 +1,6 @@
 # Multi-module Maven project: framework, infra-ai, mcp-server (libs) + bootstrap (runnable app).
 # We build only bootstrap and its upstream modules (-am), producing a single runnable JAR (monolithic deploy).
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /build
 
 # Copy root POM and all module POMs so the refactor is defined
