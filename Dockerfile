@@ -3,27 +3,23 @@
 FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /build
 
-# Copy root POM and all module POMs so the refactor is defined
+# Copy root POM and all module POMs so the reactor is defined
 COPY pom.xml .
 COPY framework/pom.xml framework/
 COPY infra-ai/pom.xml infra-ai/
 COPY mcp-server/pom.xml mcp-server/
 COPY bootstrap/pom.xml bootstrap/
 
-# Resolve dependencies only for bootstrap and its dependnecies (framework, infra-ai)
-RUN mvn dependency:go-offline -pl bootstrap -am -B -q || true
+# Resolve dependencies only for bootstrap and its dependencies (framework, infra-ai)
+RUN ./mvnw -q -DskipTests -DskipITs -pl bootstrap -am dependency:go-offline || true
 
 # Copy full source and build only the bootstrap app (and its module deps)
 COPY . .
-RUN mvn package -pl bootstrap -am -DskipTests -B -q
+RUN ./mvnw -q -DskipTests -DskipITs -pl bootstrap -am package
 
 # Runtime stage
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
-
-# Non-root user
-RUN adduser -D -u 1000 ragent
-USER ragent
 
 COPY --from=builder /build/bootstrap/target/bootstrap-*.jar app.jar
 
