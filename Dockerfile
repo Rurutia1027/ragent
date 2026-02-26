@@ -21,8 +21,6 @@ RUN mvn package -pl bootstrap -am -DskipTests -B -q
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
-RUN apk add --no-cache curl
-
 # Non-root user
 RUN adduser -D -u 1000 ragent
 USER ragent
