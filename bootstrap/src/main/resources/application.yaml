@@ -170,3 +170,13 @@ sa-token:
   token-style: simple-uuid
   is-log: false
   is-print: false
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
